@@ -73,14 +73,14 @@ def get_pie_chart(entered_site):
 # TASK 4:
 # Add a callback function for `site-dropdown` and `payload-slider` as inputs, `success-payload-scatter-chart` as output
 @app.callback(Output(component_id='success-payload-scatter-chart', component_property='figure'),
-              [Input(component_id='site-dropdown', component_property='value'),Input(component_id="payload-slider", component_property="value")])
+              [Input(component_id='site-dropdown', component_property='value'),Input(component_id='payload-slider', component_property='value')])
 def get_payload_scatter_chart(entered_site,payload_range):
     low,high=payload_range
-    filtered_df = spacex_df[spacex_df['Launch Site']==entered_site]
-    filtered_df = filtered_df[filtered_df['Payload Mass (kg)']>low]
-    filtered_df = filtered_df[filtered_df['Payload Mass (kg)']<high]
+    filtered = spacex_df[(spacex_df['Payload Mass (kg)'] >= low) & 
+                            (spacex_df['Payload Mass (kg)'] <= high)]
+    filtered_df =filtered[filtered['Launch Site']==entered_site]
     if entered_site == 'ALL':
-        fig2 = px.scatter(spacex_df,x='Payload Mass (kg)', y='class',
+        fig2 = px.scatter(filtered,x='Payload Mass (kg)', y='class',
         color="Booster Version Category", 
         title='Correlation between Payload and Scatter for all Sites')
         return fig2
